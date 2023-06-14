@@ -1,0 +1,37 @@
+# Use an official NVIDIA CUDA base image
+FROM nvidia/cuda:12.0.0-devel-ubuntu22.04
+
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y wget bzip2 ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 curl net-tools && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    sh Miniconda3-latest-Linux-x86_64.sh -bfp /usr/local && \
+    rm Miniconda3-latest-Linux-x86_64.sh && \
+    conda clean --all && \
+    ln -s /usr/local/bin/conda /usr/bin/conda
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy only docker_env.yml and app.py into the container at /app
+COPY docker_env.yml app.py /app/
+
+# Install the required packages
+RUN conda env create -f docker_env.yml
+
+# Activate the conda environment and run "conda init bash"
+SHELL ["conda", "run", "-n", "docker_tf", "/bin/bash", "-c", "conda init bash"]
+
+# Download the pre-trained ResNet50 model
+ADD https://download.pytorch.org/models/resnet50-19c8e357.pth /app/models/resnet50.pth
+
+# Expose port 80 for the application
+EXPOSE 80
+
+# Run the Flask application when the container launches
+CMD ["conda", "run", "-n", "docker_tf", "python", "/app/app.py"]
+# CMD ["conda", "run", "--no-capture-output", "-n", "docker_tf", "python", "/app/app.py"]
