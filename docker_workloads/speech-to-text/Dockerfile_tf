@@ -1,0 +1,16 @@
+
+FROM tensorflow/tensorflow:latest-gpu
+
+WORKDIR /app
+
+COPY app.py /app/
+
+RUN pip3 install pipreqs
+RUN pip3 install omegaconf
+RUN pipreqs --force --mode no-pin /app
+
+RUN pip3 install -r /app/requirements.txt
+
+EXPOSE 3333
+
+CMD ["python", "/app/app.py"]
