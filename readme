@@ -1,0 +1,49 @@
+A. In case you're having trouble accessing the raw doc readme files (in each of the sub-directories), here the readme links to the following:
+
+1. README_MPS: https://docs.google.com/document/d/1VV4zbBdzT0i8uB88UR6vL9zAPeqil08UrEeqdsP2Un0/edit?usp=sharing
+2. README_MPS-DOCKER: https://docs.google.com/document/d/11jMSJF42TZFPNgAbaQ8i7Z3ZGZGwp7x1JUdPi6fQFqc/edit?usp=sharing
+3. README_DOCKER-WORKLOADS: https://docs.google.com/document/d/1MMtZ2b5TTk5OLi-GNvljf88Wl1E1MT7SyRVb2idtnwQ/edit?usp=sharing
+
+B. Overall important commands pertaining to the threads mentioned above are as follows:
+
+1. MPS THREAD:
+  a. Starting MPS
+     export CUDA_VISIBLE_DEVICES="0"
+     nvidia-smi -i 0 -c EXCLUSIVE_PROCESS
+     nvidia-cuda-mps-control -d
+
+  b. Stopping MPS
+     echo quit | nvidia-cuda-mps-control
+
+  c. Restricting cores and memory via MPS
+     source ~/rahul/mps/set_gpu_limits.sh "0=2G" 10 
+
+2. MPS-DOCKER THREAD:
+  a. Build Commands
+     sudo docker build -t master-img -f Dockerfile-master .
+     sudo docker build -t cuda-img -f Dockerfile-cuda .
+  
+  b. Containerized Approach
+     Running master: sudo docker run --gpus all --runtime=nvidia --ipc=host -v nvidia_mps:/tmp/nvidia-mps master-img
+     Running C1: sudo docker run --ipc=host --gpus all --runtime=nvidia -v nvidia_mps:/tmp/nvidia-mps --env CUDA_MPS_ACTIVE_THREAD_PERCENTAGE=10 --env CUDA_MPS_PINNED_DEVICE_MEM_LIMIT='0=2G' cuda-img
+
+  c. Non-containerized Approach
+     export CUDA_MPS_PIPE_DIRECTORY=/tmp/nvidia-mps
+     Running C1: sudo docker run --ipc=host --gpus all --runtime=nvidia -v nvidia_mps:/tmp/nvidia-mps --env CUDA_MPS_ACTIVE_THREAD_PERCENTAGE=10 --env CUDA_MPS_PINNED_DEVICE_MEM_LIMIT='0=2G' cuda-img
+
+3. DOCKER-WORKLOADS THREAD:
+  a. Stopping a running container 
+     sudo docker stop <container-id>
+
+  b. Removing a stopped container: 
+     sudo docker rmi –force <container-id>
+
+  c. Viewing a container’s logs in case it crashes or exits abruptly: 
+     sudo docker logs <container-id>
+     (If the container exits with code 139 it implies that a segmentation fault has occurred indicating you should share the the host’s IPC with the container (--ipc=host in the docker command))
+
+  d. Viewing all docker images on the system:
+     sudo docker images   
+		
+  e. Executing commands within the container:
+	   sudo docker exec -it <container-id> <command>
