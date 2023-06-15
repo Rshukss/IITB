@@ -16,7 +16,7 @@ B. Overall important commands pertaining to the threads mentioned above are as f
      echo quit | nvidia-cuda-mps-control
 
   c. Restricting cores and memory via MPS
-     source ~/rahul/mps/set_gpu_limits.sh "0=2G" 10 
+     source ~/user/mps/set_gpu_limits.sh "0=2G" 10 
 
 2. MPS-DOCKER THREAD:
   a. Build Commands
