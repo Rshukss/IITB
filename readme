@@ -46,4 +46,4 @@ B. Overall important commands pertaining to the threads mentioned above are as f
      sudo docker images   
 		
   e. Executing commands within the container:
-	   sudo docker exec -it <container-id> <command>
+     sudo docker exec -it <container-id> <command>
