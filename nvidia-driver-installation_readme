@@ -1,0 +1,18 @@
+This document provides the necessary guidelines for the installation of a new version of NVIDIA Drivers on a system having existing drivers (already instal
+led)
+If for some reason you wish to install a different version of NVIDIA Drivers than the one existing on your system, refer to the following:
+
+1. Firstly, make sure that the new version of NVIDIA drivers you wish to install is compatible with your CUDA Toolkit. You can find the CUDA-NVIDIA Driver 
+   compatibility from NVIDIA's offical CUDA Compatibility Document: https://docs.nvidia.com/deploy/cuda-compatibility/index.html
+2. Next, head to NVIDIA's driver installation page (mentioned: https://www.nvidia.com/download/index.aspx) and plugin the appropriate system configurations
+   to download a ".run" driver file.
+3. Before installing the new drivers, ensure that all traces of NVIDIA originally present in the system are completely removed. For the same run:
+   a. If you have downloaded your original drivers using apt manager then run: sudo apt remove nvidia-* or sudo apt-get purge nvidia-*
+   b. If you have downloaded your original drivers from a .run file then run: sudo ./NVIDIA-Linux-x86_64-<version>.run --uninstall
+   Make sure the output of "dpkg -l | grep -i nvidia" is nil after running the the above commands.
+4. Once nvidia related all configurations have been completely removed, you can proceed towards the driver installations of your new drivers.
+   Run sudo .//NVIDIA-Linux-x86_64-<version>.run in the same directory as the .run file
+   During the installation process you can ignore warnings such as "error in copying or creating nvidia_uvm/nvidia_drm/nvidia_modeset." Simplt click on
+   OK and Continue Installation
+5. One common error which may cause the installation process to fail is the prompt "failed to load nvidia_drm module." This typically happens when  
+
