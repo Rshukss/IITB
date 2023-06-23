@@ -14,5 +14,7 @@ If for some reason you wish to install a different version of NVIDIA Drivers tha
    Run sudo .//NVIDIA-Linux-x86_64-<version>.run in the same directory as the .run file
    During the installation process you can ignore warnings such as "error in copying or creating nvidia_uvm/nvidia_drm/nvidia_modeset." Simplt click on
    OK and Continue Installation
-5. One common error which may cause the installation process to fail is the prompt "failed to load nvidia_drm module." This typically happens when  
+5. One common error which may cause the installation process to fail is the prompt "failed to load nvidia_drm module." This typically happens when the dkms 
+   module is not installed causing an incorrect loading of the kernel modules. 
+   Simply apt install dkms and retry the installation process and it should work all fine.
 
